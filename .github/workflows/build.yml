@@ -15,10 +15,15 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - uses: android-actions/setup-android@v3
+      # ubuntu-latest ships the Android SDK at $ANDROID_HOME; no extra action needed
+      - name: show SDK
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          ls "$ANDROID_HOME/platforms" | tail -3
+          ls "$ANDROID_HOME/build-tools" | tail -3
 
-      - name: accept SDK licences
-        run: yes | sdkmanager --licenses > /dev/null 2>&1 || true
+      - name: accept licences
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null 2>&1 || true
 
       - uses: gradle/actions/setup-gradle@v4
         with:
